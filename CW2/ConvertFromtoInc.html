@@ -27,6 +27,10 @@ Inches
 &emsp;
 <input type=button value=Convert onClick="convertFromInchtoCM()">
 <br>
+CM
+<input type=number value=0 id=inp onChange="out.innerText=value">
+&emsp;
+<input type=button value=Convert onClick="convertFromCMtoInches()">
 
 <p id=out>This text is not shown. Why?</p>
 
@@ -51,6 +55,17 @@ function convertFromInchtoCM() {
     out.innerText = cm + " cm";
     // document.getElementById("outputcm").innerHTML= cm;
 }
+
+function convertFromCMtoInches() {
+    let cm = Number(out.innerText);
+    // let Inches = document.getElementById("inp").innerText;
+    console.log("Inches = "+cm);
+    let inches = (Number(cm * 0.39370)).toFixed(1);
+    // console.log("CM = "+ cm);
+    out.innerText = inches + " inches";
+    // document.getElementById("outputcm").innerHTML= cm;
+}
+
     //global variable id is the HTML element with id 
     //const title = document.getElementById("title");
     title.innerText = document.title;
