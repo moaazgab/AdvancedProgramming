@@ -15,20 +15,27 @@ function tableFor(evt) {
   return table;
 }
 
-function analyze(min=0) {
-  // let a = [];
-  // let count = 0;
-  let obj= {
-    a:[],
-    count:0
-  };
+function analyze(min = 0) {
+  let a = [];
   for (let evt of EVENTS) {
+
     let cor = phi(tableFor(evt));
-    if (Math.abs(cor) > min)
-      obj.a.push(evt +": "+cor.toFixed(4))
-      obj.count += 1;
+
+    if (Math.abs(cor) > min) {
+      a.push(evt + ": " + cor.toFixed(4) + " " + countEvents(evt))
+    }
   }
-  return obj;
+  return a
+}
+
+function countEvents(evt) {
+  counter = 0;
+  for (let entry of JOURNAL) {
+    if (entry.events.includes(evt)) {
+      counter++;
+    }
+  }
+  return counter;
 }
 
 function journalEvents() {
