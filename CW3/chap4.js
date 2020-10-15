@@ -16,13 +16,19 @@ function tableFor(evt) {
 }
 
 function analyze(min=0) {
-  let a = [];
+  // let a = [];
+  // let count = 0;
+  let obj= {
+    a:[],
+    count:0
+  };
   for (let evt of EVENTS) {
     let cor = phi(tableFor(evt));
     if (Math.abs(cor) > min)
-      a.push(evt +": "+cor.toFixed(4))
+      obj.a.push(evt +": "+cor.toFixed(4))
+      obj.count += 1;
   }
-  return a
+  return obj;
 }
 
 function journalEvents() {
