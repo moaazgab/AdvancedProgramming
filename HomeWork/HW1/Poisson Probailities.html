@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width">
+    <link rel="icon" sizes="192x192" href="/JS/images/JS.png">
+    <title>Poisson Probailities</title>
+
+    <style>
+        body {
+            max-width: 440px;
+        }
+
+        #sample {
+            overflow-x: auto;
+        }
+
+        table {
+            border-collapse: collapse;
+        }
+
+        th {
+            color: blue;
+            padding: 5px 5px;
+        }
+
+        td {
+            border: 1px solid blue;
+            padding: 5px 5px;
+            text-align: center;
+            position: relative;
+        }
+
+        td:hover .tip {
+            visibility: visible;
+        }
+
+        td .tip {
+            visibility: hidden;
+            font-size: small;
+            background-color: blue;
+            color: white;
+            text-align: center;
+            padding: 5px 5px;
+            position: absolute;
+            left: 5px;
+            top: 20px;
+        }
+    </style>
+</head>
+
+<body>
+    <center>
+        <h2 id=title></h2>
+
+        <p>Size:
+            <select id="size" oninput="tableFromMenu()">
+                <option selected>9x6</option>
+                <option>5x5</option>
+                <option>7x8</option>
+                <option>9x9</option>
+            </select></p>
+
+        <table id="tablo"></table>
+
+        <p id=out style="font-size:small"></p>
+
+        <form oninput="tableFromInput()">
+            Rows:
+            <input type=number id=rows style="width:40px" value=9>
+            Columns:
+            <input type=number id=cols style="width:40px" value=6>
+            <br><br>
+            <input type=reset>
+            <input type=button value="Make Table" onclick="tableFromInput()">
+        </form>
+    </center>
+
+    <hr />
+    <b>Sample code</b>
+    <pre id=sample></pre>
+    <hr />
+
+    <script>
+        "use strict";
+        //June 8, 2018 MAE -- basis for 
+        //https://maeyler.github.io/Visual-Mujam/
+        //
+        function makeRows(m, n) {
+            let row = "<th></th>";
+            for (let lampdaChar = 0.5; lampdaChar <= (n / 2); lampdaChar += 0.5)
+                row += "<th>" + "λ=" + lampdaChar + "</th>";
+            let text = "<tr>" + row + "</tr>";
+            let tempArray = [];
+            let counter = 0;
+            for (let xValue = 0; xValue < m; xValue++) {
+                row = "<th>" + "x=" + xValue + "</th>";
+                for (let lampdaValue = 0.5; lampdaValue <= (n / 2); lampdaValue += 0.5) {
+                    // let p = n * (xValue - 1) + lampdaValue;
+                    // let p = (Math.exp(-lampdaValue)).toFixed(4);
+                    // let s = "<span class=tip>C" + p + "</span>"
+                    // row += "<td>" + (Math.exp(-lampdaValue)).toFixed(4) + "</td>";
+                    if (xValue === 0) {
+                        let firstLine = Math.exp(-lampdaValue);
+                        row += "<td>" + firstLine.toFixed(4) + "</td>";
+                        tempArray.push(firstLine);
+                    }
+                    else {
+                        let valueOfOneLineBefore = tempArray[counter];
+                        counter++;
+                        let poissonProbability = (valueOfOneLineBefore * lampdaValue / xValue);
+                        console.log("tempArray[", counter - 1, "] = ", valueOfOneLineBefore.toFixed(4));
+                        tempArray.push(poissonProbability);
+                        row += "<td>" + poissonProbability.toFixed(4) + "</td>";
+                    }
+                    // row = "<td>"+ " " +"</td>";
+                }
+                text += "<tr>" + row + "</tr>";
+            }
+            let t = text.length + " chars";
+            console.log("makeRows: " + m + "x" + n + " " + t);
+            tablo.innerHTML = text; out.innerText = t;
+        }
+        function tableFromMenu() {
+            let [m, n] = size.value.split("x");
+            makeRows(m, n); //a[0], a[1]
+            rows.value = m;
+            cols.value = n;
+        }
+        function tableFromInput() {
+            let m = rows.value;
+            let n = cols.value;
+            makeRows(m, n);
+            size.value = m + "x" + n;
+        }
+        title.innerText = document.title;
+        sample.innerText = makeRows.toString();
+        makeRows(9, 6);
+    </script>
+
+</body>
+
+</html>
