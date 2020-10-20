@@ -52,13 +52,37 @@ function toList(str) {
     // console.log("Keys:", keys)
     let arrayOfObjects = data.map(toObject)
     // arrayOfObjects.filter(obj => obj.height>5000)
-    for(let i = 0; i < arrayOfObjects.length; i++)
-      console.log("This is arroObjects: ",arrayOfObjects[i].height);
+
+    out.innerText = "\n----------------------------------------------\nThis is all objects\n----------------------------------------------\n"
+    out.innerText += JSON.stringify(arrayOfObjects, '' ,2)
+
+    out.innerText += "\n----------------------------------------------\nAfter filtering objects to heights > 5000\n----------------------------------------------\n"
+    arrayOfObjects = arrayOfObjects.filter(x => x.height > 5000)
+    out.innerText += JSON.stringify(arrayOfObjects, '' ,2)
+
+    out.innerText += "\n----------------------------------------------\nAfter sorting objects according to it's heights\n----------------------------------------------\n"
+    arrayOfObjects = arrayOfObjects.sort(compare);
+    out.innerText += JSON.stringify(arrayOfObjects, '' ,2)
+    // out.innerText += JSON.stringify('/\\n')
+    // out.innerText += JSON.stringify( "\n", null, "");
+    // out.innerText += JSON.parse(jsonEscape('{"/n"}'))
+    out.innerText += "\n----------------------------------------------\nAfter reversing objects\n----------------------------------------------\n"
+    arrayOfObjects = arrayOfObjects.reverse()
+    // arrayOfObjects = arrayOfObjects.reverse();
+
+    // for(let i = 0; i < arrayOfObjects.length; i++)
+    //   console.log("This is arroObjects: ",arrayOfObjects[i].height);
     // a = a.map(x => x.mountain + " " + x.height + " " + x.place)
     // console.log("This is : ", a[0].mountain);
-    out.innerText = JSON.stringify(arrayOfObjects, '' ,2)
+    out.innerText += JSON.stringify(arrayOfObjects, '' ,2)
     // console.table(a)
     return arrayOfObjects
+}
+function compare( a, b ) {
+  if ( a.height > b.height ){
+    return 1;
+  }
+  return 0;
 }
 const PLANET = 
 `Name	Diam	Mass	Radius	Period
