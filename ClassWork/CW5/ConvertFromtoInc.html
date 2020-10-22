@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="en-US">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width">
+    <link rel="icon" href="https://blm-fsmvu.github.io/305/images/icon192.png">
+    <title>Convert from inches to cm </title>
+
+    <style>
+        /* CSS comment */
+        body {
+            max-width: 440px;
+        }
+
+        #inp {
+            width: 50px
+        }
+
+        #out {
+            font-size: 18px;
+            background: blue;
+            color: white;
+            text-align: center;
+            padding: 10px;
+        }
+    </style>
+</head>
+
+<body>
+    <!-- HTML comment: Modify all items marked xxx -->
+
+    <h2 id=title>This text is not shown. Why?</h2>
+    Celsius
+    <input type=number value=0 id=inp onChange="out.innerText=value">
+    &emsp;
+    <input type=button value=Convert onClick="convertFromInchtoCM()">
+    <br>
+    Fahrenheit
+    <input type=number value=0 id=inp onChange="out.innerText=value">
+    &emsp;
+    <input type=button value=Convert onClick="convertFromCMtoInches()">
+
+    <p id=out>This text is not shown. Why?</p>
+
+    <hr />
+    <b>Sample code</b>
+    <pre id=sample>This text is not shown. Why?</pre>
+
+    <hr />
+    <p>Ref: <a href="https://www.w3schools.com/js/" target="NewTab">JS Tutorial</a>
+    </p>
+
+    <script>
+        "use strict";
+        // JavaScript comment
+        // celsius = Inchess
+        // fahrenheit = cm
+        function convertFromInchtoCM() {
+            let celsius = Number(out.innerText);
+            let temp = new Temperature(celsius);
+            // // let Inches = document.getElementById("inp").innerText;
+            // console.log("Inches = " + Inches);
+            let fahrenheit = temp.fahrenheit;
+            // // console.log("CM = "+ cm);
+            out.innerText = fahrenheit + " fahrenheit";
+            // // document.getElementById("outputcm").innerHTML= cm;
+            
+        }
+
+        function convertFromCMtoInches() {
+            let fahrenheit = Number(out.innerText);
+            let temp = new Temperature(22);
+            // let Inches = document.getElementById("inp").innerText;
+            // console.log("Inches = " + cm);
+            let inches = (Number(cm * 0.39370)).toFixed(1);
+            // console.log("CM = "+ cm);
+            out.innerText = inches + " inches";
+            // document.getElementById("outputcm").innerHTML= cm;
+        }
+
+        class Temperature {
+            constructor(celsius) {
+                this.celsius = celsius;
+            }
+            get fahrenheit() {
+                return this.celsius * 1.8 + 32;
+            }
+            set fahrenheit(value) {
+                this.celsius = (value - 32) / 1.8;
+            }
+
+            static fromFahrenheit(value) {
+                return new Temperature((value - 32) / 1.8);
+            }
+        }
+
+        let temp = new Temperature(22);
+        console.log(temp.fahrenheit);
+        // → 71.6
+        temp.fahrenheit = 86;
+        console.log(temp.celsius);
+        // → 30
+
+        //global variable id is the HTML element with id 
+        //const title = document.getElementById("title");
+        title.innerText = document.title;
+        sample.innerText = convertFromInchtoCM.toString();
+        out.innerText = 0;
+    // increment();
+    </script>
+
+</body>
+
+</html>
