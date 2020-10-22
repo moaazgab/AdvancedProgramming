@@ -5,7 +5,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width">
     <link rel="icon" href="https://blm-fsmvu.github.io/305/images/icon192.png">
-    <title>Convert from inches to cm </title>
+    <title>Convert from celsius to fahrenheit </title>
 
     <style>
         /* CSS comment */
@@ -34,12 +34,12 @@
     Celsius
     <input type=number value=0 id=inp onChange="out.innerText=value">
     &emsp;
-    <input type=button value=Convert onClick="convertFromInchtoCM()">
+    <input type=button value=Convert onClick="convertFromCelsiusToFahrenheit()">
     <br>
     Fahrenheit
     <input type=number value=0 id=inp onChange="out.innerText=value">
     &emsp;
-    <input type=button value=Convert onClick="convertFromCMtoInches()">
+    <input type=button value=Convert onClick="convertFromFahrenheitToCelsius()">
 
     <p id=out>This text is not shown. Why?</p>
 
@@ -56,7 +56,7 @@
         // JavaScript comment
         // celsius = Inchess
         // fahrenheit = cm
-        function convertFromInchtoCM() {
+        function convertFromCelsiusToFahrenheit() {
             let celsius = Number(out.innerText);
             let temp = new Temperature(celsius);
             // // let Inches = document.getElementById("inp").innerText;
@@ -68,14 +68,14 @@
             
         }
 
-        function convertFromCMtoInches() {
+        function convertFromFahrenheitToCelsius() {
             let fahrenheit = Number(out.innerText);
-            let temp = new Temperature(22);
             // let Inches = document.getElementById("inp").innerText;
             // console.log("Inches = " + cm);
-            let inches = (Number(cm * 0.39370)).toFixed(1);
+            // let inches = (Number(cm * 0.39370)).toFixed(1);
             // console.log("CM = "+ cm);
-            out.innerText = inches + " inches";
+            let cels = Temperature.fromFahrenheit(fahrenheit).celsius;
+            out.innerText = cels+ " celsius";
             // document.getElementById("outputcm").innerHTML= cm;
         }
 
@@ -105,7 +105,8 @@
         //global variable id is the HTML element with id 
         //const title = document.getElementById("title");
         title.innerText = document.title;
-        sample.innerText = convertFromInchtoCM.toString();
+        sample.innerText = convertFromCelsiusToFahrenheit.toString() + "\n----\nand\n-----\n";
+        sample.innerText += convertFromFahrenheitToCelsius.toString();
         out.innerText = 0;
     // increment();
     </script>
