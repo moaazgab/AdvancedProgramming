@@ -43,12 +43,23 @@ function ifWeekendAndWorkExist() {
   for (let entry of JOURNAL) {
     eventsArray = entry.events;
     if (eventsArray.includes("weekend") && eventsArray.includes("work")) {
-      let str = 
       text += 'This array of events [ ' + `${eventsArray}`.fontcolor("green") + ' ]' + ' has both of them<br/>'.fontcolor("red");
     }
     else
-      text += "This array of events [ " + `${eventsArray}`.fontcolor("green") + ' ]' + " has just one of them<br/>".fontcolor("blue") ;
+      text += "This array of events [ " + `${eventsArray}`.fontcolor("green") + ' ]' + " has just one of them<br/>".fontcolor("blue");
   }
+  return text;
+}
+
+function searchForActivity(chosen) {
+  let text = '';
+  JOURNAL.map((entry) => {
+    eventsArray = entry.events;
+    if (eventsArray.includes("weekend") && eventsArray.includes(chosen)) {
+      // console.log("this is : ", eventsArray);
+      text += 'This array [ ' + `${eventsArray}`.fontcolor("green") + '] has ' + `${chosen}`.fontcolor("red")  + ' as well as ' + 'weekend'.fontcolor("gray") + '<br/>';
+    }
+  });
   return text;
 }
 
