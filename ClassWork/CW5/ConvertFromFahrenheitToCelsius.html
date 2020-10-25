@@ -63,7 +63,7 @@
             // console.log("Inches = " + Inches);
             let fahrenheit = temp.fahrenheit;
             // // console.log("CM = "+ cm);
-            out.innerText = fahrenheit + " fahrenheit";
+            out.innerText = fahrenheit.toFixed(1) + " fahrenheit";
             // // document.getElementById("outputcm").innerHTML= cm;
             
         }
@@ -75,7 +75,7 @@
             // let inches = (Number(cm * 0.39370)).toFixed(1);
             // console.log("CM = "+ cm);
             let cels = Temperature.fromFahrenheit(fahrenheit).celsius;
-            out.innerText = cels+ " celsius";
+            out.innerText = cels.toFixed(1) + " celsius";
             // document.getElementById("outputcm").innerHTML= cm;
         }
 
