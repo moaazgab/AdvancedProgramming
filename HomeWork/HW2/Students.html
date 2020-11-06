@@ -1,0 +1,234 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width">
+    <link rel="icon" href="icon192.png">
+    <title>Student Database </title>
+
+    <style>
+        body {
+            max-width: 440px;
+        }
+
+        .link {
+            color: blue;
+            cursor: pointer;
+            font-style: italic;
+        }
+
+        .liste {
+            visibility: hidden;
+            font: 11px arial, sans-serif;
+            color: white;
+            background: blue;
+            cursor: text;
+            padding: 6px;
+            position: absolute;
+            height: 116px;
+            overflow-y: auto;
+        }
+
+        .link:hover .liste {
+            visibility: visible;
+        }
+    </style>
+</head>
+
+<body>
+
+    <h2 id=title></h2>
+
+    <button onClick='randomStd()'>Random</button>
+    <button onClick='findBest()'>Best GPA</button>
+    <button onClick='out.innerText=""'>Clear</button>
+
+    <p>Student id:
+        <input type=number onChange="showStudent(value)">
+    </p>
+    <p>Course id:
+        <input type=text onChange="showCourse(value)" value="math 206 ">
+    </p>
+    <p id=out onClick='doClick(event)'>Result:</p>
+
+    <p>* Student list taking a given course</p>
+    <p>Course:
+        <select id="coursesList" oninput="stdLstForGivnCourse(this.options[this.selectedIndex].value)">
+        </select>
+    </p>
+
+    <p>Student List</p>
+    <ul id=studentListOut></ul>
+
+    <hr />
+    <b>Sample code</b>
+    <pre id=sample></pre>
+    <hr />
+
+    <script>
+        "use strict";
+        class Student {
+            constructor(id, name, gpa, ...list) {
+                if (!id) throw "Undefined Student id"
+                this.id = id; this.name = name;
+                this.gpa = gpa.padEnd(4, '0');
+                this.list = list
+            }
+            toString() {
+                return this.id + ' ' + this.name + ' ' + this.gpa
+            }
+            static fromString(s) {
+                return new Student(...s.split('\t'))
+            }
+        }
+        class Course { //implement this
+            constructor(id, time, date, ...list) {
+                this.id = id;
+                this.time = time;
+                this.date = date;
+                this.list = list;
+            }
+            toString() {
+                return this.id + ' ' +
+                    this.time + ' ' + this.date;
+            }
+            static fromString(s) {
+                return new Course(...s.split('\t'));
+            }
+        }
+
+        function report(msg, id, list) {
+            msg += " "; let txt = "<br>\n" + msg;
+            if (id) {
+                msg += id; txt += "<span class=link>" + id
+                if (list) txt += "<span class=liste>"
+                    + list.join("<br>") + "</span>"
+                txt += "</span>"
+            }
+            console.log(msg); out.innerHTML += txt;
+        }
+        const stdMap = new Map(), crsMap = new Map(); //global
+        function makeData(txt, Maker, map) {
+            map.clear()
+            for (let line of txt.split('\n')) {
+                if (!line) continue
+                let std = Maker.fromString(line)
+                map.set(std.id, std)
+            }
+            report(map.size + " students");
+            return map;
+        }
+        function fillSelecTag() {
+            let sel = document.getElementById('coursesList');
+            for (let i = 0; i < crsMap.size; i++) {
+                let opt = document.createElement('option');
+                opt.innerHTML = crsMap.get(Array.from(crsMap.keys())[i]).id;
+                opt.value = crsMap.get(Array.from(crsMap.keys())[i]).id;
+                sel.appendChild(opt);
+            }
+        }
+        function makeCoursesData(txt, Maker, map) {
+            map.clear()
+            for (let line of txt.split('\n')) {
+                if (!line) continue
+                let crs = Maker.fromString(line)
+                map.set(crs.id, crs)
+            }
+            report(map.size + " courses");
+            // filling select tag from crsMap
+            fillSelecTag();
+            return map;
+        }
+        function stdLstForGivnCourse(chosen) {
+            // console.log("chosen : ", chosen);
+            // console.log("student : ", (stdMap.get(Array.from(stdMap.keys())[4])).list.length);
+            let studentList = [];
+            for (let i = 0; i < stdMap.size; i++) {
+                if ((stdMap.get(Array.from(stdMap.keys())[i])).list.includes(chosen)) {
+                    studentList.push(stdMap.get(Array.from(stdMap.keys())[i]));
+                }
+            }
+            // studentListOut.innerHTML = makeList(studentList);
+            if (studentList.length > 0) {
+                studentListOut.innerHTML = makeUL(studentList).innerHTML;
+            }
+        }
+        function makeUL(array) {
+            // console.log("this is studentList", array.length);
+            // Create the list element:
+            let list = document.createElement('ul');
+
+            for (let i = 0; i < array.length; i++) {
+                // Create the list item:
+                let li = document.createElement('li');
+                // console.log("this is array", array[i].name);
+                // Set its contents:
+                li.appendChild(document.createTextNode(array[i].name));
+                // li.innerHTML = array[i].name;
+                // Add it to the list:
+                list.appendChild(li);
+            }
+
+            // Finally, return the constructed list:
+            return list;
+        }
+        function doClick(evt) {
+            let s = evt.target.innerText;
+            //if s contains only digits
+            if (/^\d+$/.test(s)) showStudent(s);
+        }
+        function showStudent(id) {
+            let std = stdMap.get(id);
+            if (!std) return report(id + " not found");
+            let t = std.toString()
+            report(t, "(" + std.list.length + " courses)", std.list);
+            return std
+        }
+        function showCourse(id) {
+            id = id.toUpperCase();
+            let a = [];
+            for (let std of stdMap.values())
+                if (std.list.includes(id))
+                    a.push(std.id + " " + std.name);
+            if (a.length > 0)
+                report(id + ": ", a.length + " students", a);
+            else report("No students in " + id);
+            return a
+        }
+        function randomStd() {
+            let keys = [...stdMap.keys()]  //Iterable
+            console.assert(keys.length == stdMap.size)
+            let i = Math.trunc(keys.length * Math.random());
+            let b = stdMap.get(keys[i]);
+            report("Random: ", b.id);
+            return b
+        }
+        function findBest() { //the best gpa in stdMap
+            let maxGPAStudent = Student.fromString('116690070	TEKİN	1.35	BPP 101	BPP 103	BPP 105	BPP 107	BPP 109	UNIM 103');
+            for (let std of stdMap.values()) {
+                if (std.gpa > maxGPAStudent.gpa)
+                    maxGPAStudent = std;
+            }
+            report("Max GPA is :", maxGPAStudent.gpa);
+            // console.log("THis is id", crsMap.get(Array.from(crsMap.keys())[1]).id);
+            // console.log(stdMap);
+        }
+        const LINK = "https://maeyler.github.io/JS/data/"
+        function readStudents() {
+            fetch(LINK + "Students.txt").then(r => r.text())
+                .then(t => makeData(t, Student, stdMap))
+            // .catch(console.log("Can't laod students data!!"));
+        }
+        function readCourses() {
+            fetch(LINK + "Courses.txt").then(r => r.text())
+                .then(c => makeCoursesData(c, Course, crsMap))
+            // .catch(console.log("Can't laod courses data!!"));
+        }
+        title.innerText = document.title;
+        sample.innerText = Course + "\n" + readCourses + "\n" + findBest
+        readStudents(); readCourses();
+    </script>
+</body>
+
+</html>
