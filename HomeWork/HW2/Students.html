@@ -57,10 +57,16 @@
         <select id="coursesList" oninput="stdLstForGivnCourse(this.options[this.selectedIndex].value)">
         </select>
     </p>
-
     <p>Student List</p>
     <ul id=studentListOut></ul>
 
+    <p>* Course list for a given exam room</p>
+    <p>Exam room:
+        <select id="roomsList" oninput="crsLstForGivnExmRoom(this.options[this.selectedIndex].value)">
+        </select>
+    </p>
+    <p>Course List</p>
+    <ul id=courseListOut></ul>
     <hr />
     <b>Sample code</b>
     <pre id=sample></pre>
@@ -109,7 +115,31 @@
             console.log(msg); out.innerHTML += txt;
         }
         const stdMap = new Map(), crsMap = new Map(); //global
-        function makeData(txt, Maker, map) {
+
+        function fillRoomSelecTag() {
+            let sel = document.getElementById('roomsList');
+            let examRooms = [];
+            for (let i = 0; i < crsMap.size; i++) { // loop for all courses
+
+                // console.log("This is student :", crsMap.get(Array.from(crsMap.keys())[i]).list.length);
+                let tempLst = crsMap.get(Array.from(crsMap.keys())[i]).list;
+
+                for (let j = 0; j < tempLst.length; j++) { // loop for list, every course have
+
+                    if (!examRooms.includes(tempLst[j])) { // if the room not added before to list
+                        let opt = document.createElement('option');
+                        opt.innerHTML = tempLst[j];
+                        opt.value = tempLst[j];
+                        sel.appendChild(opt);
+
+                        // add that room to list to not be added again
+                        examRooms.push(tempLst[j]);
+                    }
+                }
+
+            }
+        }
+        function makeStudentsData(txt, Maker, map) {
             map.clear()
             for (let line of txt.split('\n')) {
                 if (!line) continue
@@ -119,7 +149,7 @@
             report(map.size + " students");
             return map;
         }
-        function fillSelecTag() {
+        function fillCourseSelecTag() {
             let sel = document.getElementById('coursesList');
             for (let i = 0; i < crsMap.size; i++) {
                 let opt = document.createElement('option');
@@ -137,8 +167,44 @@
             }
             report(map.size + " courses");
             // filling select tag from crsMap
-            fillSelecTag();
+            fillCourseSelecTag();
+            // filling select tag from stdMap
+            fillRoomSelecTag();
             return map;
+        }
+        function makeUL(array) {
+            // console.log("this is studentList", array.length);
+            // Create the list element:
+
+            let list = document.createElement('ul');
+
+            // console.log("This is model of array : ", Object.keys(array[0]));
+            
+            // this means that it will work for student select tag
+            if (Object.keys(array[0]).includes("name")) {
+                for (let i = 0; i < array.length; i++) {
+                    // Create the list item:
+                    let li = document.createElement('li');
+                    // console.log("this is array", array[i].name);
+                    // Set its contents:
+                    li.appendChild(document.createTextNode(array[i].name));
+                    // li.innerHTML = array[i].name;
+                    // Add it to the list:
+                    list.appendChild(li);
+                }
+            }
+            else{ // this means that it will work for course select tag
+                for (let i = 0; i < array.length; i++) {
+                    // Create the list item:
+                    let li = document.createElement('li');
+                    // Set its contents:
+                    li.appendChild(document.createTextNode(array[i].id));
+                    // Add it to the list:
+                    list.appendChild(li);
+                }
+            }
+            // Finally, return the constructed list:
+            return list;
         }
         function stdLstForGivnCourse(chosen) {
             // console.log("chosen : ", chosen);
@@ -154,25 +220,19 @@
                 studentListOut.innerHTML = makeUL(studentList).innerHTML;
             }
         }
-        function makeUL(array) {
-            // console.log("this is studentList", array.length);
-            // Create the list element:
-            let list = document.createElement('ul');
-
-            for (let i = 0; i < array.length; i++) {
-                // Create the list item:
-                let li = document.createElement('li');
-                // console.log("this is array", array[i].name);
-                // Set its contents:
-                li.appendChild(document.createTextNode(array[i].name));
-                // li.innerHTML = array[i].name;
-                // Add it to the list:
-                list.appendChild(li);
+        function crsLstForGivnExmRoom(chosen) {
+            // 
+            let courseList = [];
+            for (let i = 0; i < crsMap.size; i++) {
+                if ((crsMap.get(Array.from(crsMap.keys())[i])).list.includes(chosen)) {
+                    courseList.push(crsMap.get(Array.from(crsMap.keys())[i]));
+                }
             }
-
-            // Finally, return the constructed list:
-            return list;
+            if (courseList.length > 0) {
+                courseListOut.innerHTML = makeUL(courseList).innerHTML;
+            }
         }
+
         function doClick(evt) {
             let s = evt.target.innerText;
             //if s contains only digits
@@ -217,7 +277,7 @@
         const LINK = "https://maeyler.github.io/JS/data/"
         function readStudents() {
             fetch(LINK + "Students.txt").then(r => r.text())
-                .then(t => makeData(t, Student, stdMap))
+                .then(t => makeStudentsData(t, Student, stdMap))
             // .catch(console.log("Can't laod students data!!"));
         }
         function readCourses() {
