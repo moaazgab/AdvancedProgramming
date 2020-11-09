@@ -52,6 +52,14 @@
     </p>
     <p id=out onClick='doClick(event)'>Result:</p>
 
+    <p>* Exam schedule for a given student</p>
+    <p>Student:
+        <select id="stdntsList" oninput="exmSchduleForGivnStdnt(this.options[this.selectedIndex].value)">
+        </select>
+    </p>
+    <p>Exam Times:</p>
+    <ul id=examTimesOut></ul>
+
     <p>* Student list taking a given course</p>
     <p>Course:
         <select id="coursesList" oninput="stdLstForGivnCourse(this.options[this.selectedIndex].value)">
@@ -60,13 +68,32 @@
     <p>Student List</p>
     <ul id=studentListOut></ul>
 
-    <p>* Course list for a given exam room</p>
-    <p>Exam room:
-        <select id="roomsList" oninput="crsLstForGivnExmRoom(this.options[this.selectedIndex].value)">
-        </select>
-    </p>
+    <p>* Course list for a given exam room <br> and <br>
+        * Total number of courses in a given room</p>
+
+    <div>
+        <p>Exam room:
+
+            <select id="roomsList" oninput="crsLstForGivnExmRoom(this.options[this.selectedIndex].value)">
+            </select>
+        </p>
+        <div style="display: flex;">
+            <p>Total number for courses is :</p>
+            <ul id=totalNumberOut></ul>
+        </div>
+    </div>
+
     <p>Course List</p>
     <ul id=courseListOut></ul>
+
+    <p>* List all exams on some day (my choise)</p>
+    <p>Day:
+        <select id="daysList" oninput="exmLstForGivnDay(this.options[this.selectedIndex].value)">
+        </select>
+    </p>
+    <p>Exam List</p>
+    <ul id=examListOut></ul>
+
     <hr />
     <b>Sample code</b>
     <pre id=sample></pre>
@@ -77,9 +104,10 @@
         class Student {
             constructor(id, name, gpa, ...list) {
                 if (!id) throw "Undefined Student id"
-                this.id = id; this.name = name;
+                this.id = id;
+                this.name = name;
                 this.gpa = gpa.padEnd(4, '0');
-                this.list = list
+                this.list = list // courses, student take
             }
             toString() {
                 return this.id + ' ' + this.name + ' ' + this.gpa
@@ -93,7 +121,7 @@
                 this.id = id;
                 this.time = time;
                 this.date = date;
-                this.list = list;
+                this.list = list; // rooms, courses give in
             }
             toString() {
                 return this.id + ' ' +
@@ -116,6 +144,37 @@
         }
         const stdMap = new Map(), crsMap = new Map(); //global
 
+        function fillStdntSelecTag() {
+            let sel = document.getElementById('stdntsList');
+            for (let i = 0; i < stdMap.size; i++) {
+                let opt = document.createElement('option');
+                let student = stdMap.get(Array.from(stdMap.keys())[i])
+                opt.innerHTML = student.id + " " + student.name
+                opt.value = student.id + " " + student.name
+                sel.appendChild(opt);
+            }
+        }
+        function makeStudentsData(txt, Maker, map) {
+            map.clear()
+            for (let line of txt.split('\n')) {
+                if (!line) continue
+                let std = Maker.fromString(line)
+                map.set(std.id, std)
+            }
+            report(map.size + " students");
+            // filling select tag from stdMap
+            fillStdntSelecTag();
+            return map;
+        }
+        function fillCourseSelecTag() {
+            let sel = document.getElementById('coursesList');
+            for (let i = 0; i < crsMap.size; i++) {
+                let opt = document.createElement('option');
+                opt.innerHTML = crsMap.get(Array.from(crsMap.keys())[i]).id;
+                opt.value = crsMap.get(Array.from(crsMap.keys())[i]).id;
+                sel.appendChild(opt);
+            }
+        }
         function fillRoomSelecTag() {
             let sel = document.getElementById('roomsList');
             let examRooms = [];
@@ -139,24 +198,25 @@
 
             }
         }
-        function makeStudentsData(txt, Maker, map) {
-            map.clear()
-            for (let line of txt.split('\n')) {
-                if (!line) continue
-                let std = Maker.fromString(line)
-                map.set(std.id, std)
+        function fillDaySelecTag() {
+            let sel = document.getElementById('daysList');
+            let dayLst = [];
+            for (let j = 0; j < crsMap.size; j++) {
+                let tmpExm = crsMap.get(Array.from(crsMap.keys())[j]);
+                console.log("THis is temp : ", tmpExm);
+                if (!dayLst.includes(tmpExm.date)) {
+                    let opt = document.createElement('option');
+                    opt.innerHTML = tmpExm.date;
+                    opt.value = tmpExm.date;
+                    sel.appendChild(opt);
+
+                    // add that date to list to not be added again
+                    dayLst.push(tmpExm.date);
+                }
             }
-            report(map.size + " students");
-            return map;
         }
-        function fillCourseSelecTag() {
-            let sel = document.getElementById('coursesList');
-            for (let i = 0; i < crsMap.size; i++) {
-                let opt = document.createElement('option');
-                opt.innerHTML = crsMap.get(Array.from(crsMap.keys())[i]).id;
-                opt.value = crsMap.get(Array.from(crsMap.keys())[i]).id;
-                sel.appendChild(opt);
-            }
+        function addOptionToList(lst, element) {
+
         }
         function makeCoursesData(txt, Maker, map) {
             map.clear()
@@ -170,6 +230,8 @@
             fillCourseSelecTag();
             // filling select tag from stdMap
             fillRoomSelecTag();
+            // finlling select tag from crsMap
+            fillDaySelecTag();
             return map;
         }
         function makeUL(array) {
@@ -179,7 +241,7 @@
             let list = document.createElement('ul');
 
             // console.log("This is model of array : ", Object.keys(array[0]));
-            
+
             // this means that it will work for student select tag
             if (Object.keys(array[0]).includes("name")) {
                 for (let i = 0; i < array.length; i++) {
@@ -193,7 +255,7 @@
                     list.appendChild(li);
                 }
             }
-            else{ // this means that it will work for course select tag
+            else { // this means that it will work for course select tag
                 for (let i = 0; i < array.length; i++) {
                     // Create the list item:
                     let li = document.createElement('li');
@@ -207,8 +269,7 @@
             return list;
         }
         function stdLstForGivnCourse(chosen) {
-            // console.log("chosen : ", chosen);
-            // console.log("student : ", (stdMap.get(Array.from(stdMap.keys())[4])).list.length);
+            // chosen is a course id
             let studentList = [];
             for (let i = 0; i < stdMap.size; i++) {
                 if ((stdMap.get(Array.from(stdMap.keys())[i])).list.includes(chosen)) {
@@ -221,7 +282,7 @@
             }
         }
         function crsLstForGivnExmRoom(chosen) {
-            // 
+            // chosen is a room id
             let courseList = [];
             for (let i = 0; i < crsMap.size; i++) {
                 if ((crsMap.get(Array.from(crsMap.keys())[i])).list.includes(chosen)) {
@@ -230,9 +291,45 @@
             }
             if (courseList.length > 0) {
                 courseListOut.innerHTML = makeUL(courseList).innerHTML;
+                totalNumberOut.innerText = courseList.length;
             }
         }
+        function exmSchduleForGivnStdnt(chosen) {
+            // chosen is a student name
+            let student = findStudentByID(chosen.substring(0, 9));
 
+            for (let i = 0; i < student.list.length; i++) {
+                let course = getCourseByID(student.list[i]);
+                examTimesOut.innerHTML += "Course (" + `${course.id}`.fontcolor("blue") + ") on " +
+                    `${course.date}`.fontcolor("red") + " at " + `${course.time}`.fontcolor("purple") + '<br/>';
+            }
+        }
+        function findStudentByID(studentID) {
+            for (let i = 0; i < stdMap.size; i++) {
+                if ((stdMap.get(Array.from(stdMap.keys())[i])).id == studentID) {
+                    return (stdMap.get(Array.from(stdMap.keys())[i]))
+                }
+            }
+        }
+        function getCourseByID(courseID) {
+            for (let j = 0; j < crsMap.size; j++) {
+                if ((crsMap.get(Array.from(crsMap.keys())[j])).id == courseID) {
+                    return (crsMap.get(Array.from(crsMap.keys())[j]));
+                }
+            }
+        }
+        function exmLstForGivnDay(chosen) {
+            // chosen is a course date
+            let examList = [];
+            for (let j = 0; j < crsMap.size; j++) {
+                if ((crsMap.get(Array.from(crsMap.keys())[j])).date == chosen) {
+                    examList.push((crsMap.get(Array.from(crsMap.keys())[j])));
+                }
+            }
+            if (examList.length > 0) {
+                examListOut.innerHTML = makeUL(examList).innerHTML;
+            }
+        }
         function doClick(evt) {
             let s = evt.target.innerText;
             //if s contains only digits
@@ -278,12 +375,12 @@
         function readStudents() {
             fetch(LINK + "Students.txt").then(r => r.text())
                 .then(t => makeStudentsData(t, Student, stdMap))
-            // .catch(console.log("Can't laod students data!!"));
+                .catch(console.log("Can't laod students data!!"));
         }
         function readCourses() {
             fetch(LINK + "Courses.txt").then(r => r.text())
                 .then(c => makeCoursesData(c, Course, crsMap))
-            // .catch(console.log("Can't laod courses data!!"));
+                .catch(console.log("Can't laod courses data!!"));
         }
         title.innerText = document.title;
         sample.innerText = Course + "\n" + readCourses + "\n" + findBest
