@@ -310,14 +310,16 @@
         }
         function findStudentByID(studentID) {
             for (let i = 0; i < stdMap.size; i++) {
-                if ((stdMap.get(Array.from(stdMap.keys())[i])).id == studentID) {
+                // if ((stdMap.get(Array.from(stdMap.keys())[i])).id == studentID) {
+                if (stdMap.has(studentID.toString())) { // I found this solution in the last minute :D
                     return (stdMap.get(Array.from(stdMap.keys())[i]))
                 }
             }
         }
         function getCourseByID(courseID) {
             for (let j = 0; j < crsMap.size; j++) {
-                if ((crsMap.get(Array.from(crsMap.keys())[j])).id == courseID) {
+                // if ((crsMap.get(Array.from(crsMap.keys())[j])).id == courseID) {
+                if (crsMap.has(courseID.toString())) { // I found this solution in the last minute :D
                     return (crsMap.get(Array.from(crsMap.keys())[j]));
                 }
             }
