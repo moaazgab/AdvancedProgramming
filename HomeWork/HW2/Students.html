@@ -79,7 +79,7 @@
         </p>
         <div style="display: flex;">
             <p>Total number for courses is :</p>
-            <ul id=totalNumberOut></ul>
+            <ul id=totalCoursesNumberOut></ul>
         </div>
     </div>
 
@@ -93,6 +93,10 @@
     </p>
     <p>Exam List</p>
     <ul id=examListOut></ul>
+
+    <p>Please enter iterator number</p>
+    <input type=number value=10000 onChange="cmpTwoSearchApproaches(value)">
+    <p id=totalStudentNumberOut></p>
 
     <hr />
     <b>Sample code</b>
@@ -203,7 +207,7 @@
             let dayLst = [];
             for (let j = 0; j < crsMap.size; j++) {
                 let tmpExm = crsMap.get(Array.from(crsMap.keys())[j]);
-                console.log("THis is temp : ", tmpExm);
+                // console.log("THis is temp : ", tmpExm);
                 if (!dayLst.includes(tmpExm.date)) {
                     let opt = document.createElement('option');
                     opt.innerHTML = tmpExm.date;
@@ -291,7 +295,7 @@
             }
             if (courseList.length > 0) {
                 courseListOut.innerHTML = makeUL(courseList).innerHTML;
-                totalNumberOut.innerText = courseList.length;
+                totalCoursesNumberOut.innerText = courseList.length;
             }
         }
         function exmSchduleForGivnStdnt(chosen) {
@@ -326,9 +330,52 @@
                     examList.push((crsMap.get(Array.from(crsMap.keys())[j])));
                 }
             }
+            // console.log('find in array', findInArray(210100112, 10000));
+            console.log(Date.now() / 1000);
             if (examList.length > 0) {
                 examListOut.innerHTML = makeUL(examList).innerHTML;
             }
+        }
+        function randomRange(myMin, myMax) {
+            return Math.floor(Math.random() * (myMax - myMin + 1) + myMin);
+        }
+        function findInMap(studentID, iterator) {
+            let totalNumber = 0;
+            for (let i = 0; i < iterator; i++) {
+                if (stdMap.has(studentID.toString())) {
+                    totalNumber++;
+                }
+                studentID++;
+            }
+            return totalNumber;
+        }
+        function findInArray(studentID, iterator) {
+            let keys = (Array.from(stdMap.keys()));
+            let totalNumber = 0;
+            // console.log("keys is : ", keys);
+            for (let i = 0; i < iterator; i++) {
+                if (keys.includes(studentID.toString())) {
+                    totalNumber++;
+                }
+                studentID++;
+            }
+            return totalNumber;
+        }
+        function cmpTwoSearchApproaches(iterator) {
+            // Timer before search in map
+            let mapTimerStart = Date.now();
+            let totalNumFromMap = findInMap(215170000, iterator);
+            let mapTimerEnd = Date.now();
+            let mapTime = mapTimerEnd - mapTimerStart;
+
+            // Timer for search in array
+            let arrayTimerStart = Date.now();
+            let totalNumFromArray = findInArray(215170000, iterator);
+            let arrayTimerEnd = Date.now();
+            let arrayTime = arrayTimerEnd - arrayTimerStart;
+            // console.log(mapTime);
+            totalStudentNumberOut.innerText = "Total found students from map is: " + totalNumFromMap + " in just " + mapTime + " ms\n" +
+                "Total found students from array is: " + totalNumFromArray + " in " + arrayTime + " ms";
         }
         function doClick(evt) {
             let s = evt.target.innerText;
