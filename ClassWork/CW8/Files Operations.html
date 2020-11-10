@@ -42,24 +42,24 @@
             let found = 0;
             let nameList = []
             //Implement this
-            for (let i = 0; i < a.length; i++) {
-                out.innerText +=a[i].name + ", " ;
-                if (a[i].size == b.size && a[i].type == b.type) {
+            for (let f of a) {
+                out.innerText += f.name + ", ";
+                if (f.size == b.size && f.type == b.type) {
                     found += 1;
-                    nameList.push(a[i].name);
+                    nameList.push(f.name);
                 }
             }
-            out.innerHTML += '<br/>Result: ' + a.length + ' items checked, ' ;
-            if (found > 0 ) {
-                
+            out.innerHTML += '<br/>Result: ' + a.length + ' items checked, ';
+            if (found > 0) {
+
                 for (let i = 0; i < nameList.length; i++) {
                     let element = nameList[i];
                     out.innerHTML += `${element}`.bold() + ", ";
-                    
+
                 }
-                out.innerHTML +=       " are the same.";
+                out.innerHTML += " are the same.";
             }
-            else{
+            else {
                 out.innerHTML += "all files are different.";
             }
 
