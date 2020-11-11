@@ -54,8 +54,9 @@
 
     <p>* Exam schedule for a given student</p>
     <p>Student:
-        <select id="stdntsList" oninput="exmSchduleForGivnStdnt(this.options[this.selectedIndex].value)">
-        </select>
+        <!-- <select id="stdntsList" oninput="exmSchduleForGivnStdnt(this.options[this.selectedIndex].value)">
+        </select> -->
+        <input type=number value=116690070 onChange="exmSchduleForGivnStdnt(value)">
     </p>
     <p>Exam Times:</p>
     <ul id=examTimesOut></ul>
@@ -167,20 +168,21 @@
             }
             report(map.size + " students");
             // filling select tag from stdMap
-            fillStdntSelecTag();
+            // fillStdntSelecTag();
             return map;
         }
         function fillCourseSelecTag() {
-            let sel = document.getElementById('coursesList');
+            let lst = document.getElementById('coursesList');
             for (let i = 0; i < crsMap.size; i++) {
-                let opt = document.createElement('option');
-                opt.innerHTML = crsMap.get(Array.from(crsMap.keys())[i]).id;
-                opt.value = crsMap.get(Array.from(crsMap.keys())[i]).id;
-                sel.appendChild(opt);
+                // let opt = document.createElement('option');
+                // opt.innerHTML = crsMap.get(Array.from(crsMap.keys())[i]).id;
+                // opt.value = crsMap.get(Array.from(crsMap.keys())[i]).id;
+                // lst.appendChild(opt);
+                addOptionsToList(lst, crsMap.get(Array.from(crsMap.keys())[i]).id);
             }
         }
         function fillRoomSelecTag() {
-            let sel = document.getElementById('roomsList');
+            let lst = document.getElementById('roomsList');
             let examRooms = [];
             for (let i = 0; i < crsMap.size; i++) { // loop for all courses
 
@@ -190,10 +192,12 @@
                 for (let j = 0; j < tempLst.length; j++) { // loop for list, every course have
 
                     if (!examRooms.includes(tempLst[j])) { // if the room not added before to list
-                        let opt = document.createElement('option');
-                        opt.innerHTML = tempLst[j];
-                        opt.value = tempLst[j];
-                        sel.appendChild(opt);
+                        // let opt = document.createElement('option');
+                        // opt.innerHTML = tempLst[j];
+                        // opt.value = tempLst[j];
+                        // lst.appendChild(opt);
+
+                        addOptionsToList(lst, tempLst[j]);
 
                         // add that room to list to not be added again
                         examRooms.push(tempLst[j]);
@@ -203,24 +207,28 @@
             }
         }
         function fillDaySelecTag() {
-            let sel = document.getElementById('daysList');
+            let lst = document.getElementById('daysList');
             let dayLst = [];
             for (let j = 0; j < crsMap.size; j++) {
                 let tmpExm = crsMap.get(Array.from(crsMap.keys())[j]);
                 // console.log("THis is temp : ", tmpExm);
                 if (!dayLst.includes(tmpExm.date)) {
-                    let opt = document.createElement('option');
-                    opt.innerHTML = tmpExm.date;
-                    opt.value = tmpExm.date;
-                    sel.appendChild(opt);
+                    // let opt = document.createElement('option');
+                    // opt.innerHTML = tmpExm.date;
+                    // opt.value = tmpExm.date;
+                    // sel.appendChild(opt);
+                    addOptionsToList(lst, tmpExm.date);
 
                     // add that date to list to not be added again
                     dayLst.push(tmpExm.date);
                 }
             }
         }
-        function addOptionToList(lst, element) {
-
+        function addOptionsToList(lst, element) {
+            let opt = document.createElement('option');
+            opt.innerHTML = element;
+            opt.value = element;
+            lst.appendChild(opt);
         }
         function makeCoursesData(txt, Maker, map) {
             map.clear()
@@ -299,30 +307,43 @@
             }
         }
         function exmSchduleForGivnStdnt(chosen) {
+            examTimesOut.innerHTML = '';
             // chosen is a student name
-            let student = findStudentByID(chosen.substring(0, 9));
-
-            for (let i = 0; i < student.list.length; i++) {
-                let course = getCourseByID(student.list[i]);
-                examTimesOut.innerHTML += "Course (" + `${course.id}`.fontcolor("blue") + ") on " +
-                    `${course.date}`.fontcolor("red") + " at " + `${course.time}`.fontcolor("purple") + '<br/>';
+            // let student = findStudentByID(chosen.substring(0, 9));
+            // console.log("THis is student number: ", chosen);
+            // in new approach chosen is a student number
+            if (chosen) { // if chosem box is not empty
+                let student = findStudentByID(chosen);
+                if (student) { // if student found with given id
+                    for (let i = 0; i < student.list.length; i++) {
+                        let course = getCourseByID(student.list[i]);
+                        examTimesOut.innerHTML += "Course (" + `${course.id}`.fontcolor("blue") + ") on " +
+                            `${course.date}`.fontcolor("red") + " at " + `${course.time}`.fontcolor("purple") + '<br/>';
+                    }
+                }
+                else {
+                    examTimesOut.innerHTML += "No student found with that id, Please enter a valid student ID!".fontcolor("red") + '<br/>' +
+                        "For example: 210111108, 315001000, ...".fontcolor("gray");
+                }
             }
         }
         function findStudentByID(studentID) {
-            for (let i = 0; i < stdMap.size; i++) {
-                // if ((stdMap.get(Array.from(stdMap.keys())[i])).id == studentID) {
-                if (stdMap.has(studentID.toString())) { // I found this solution in the last minute :D
-                    return (stdMap.get(Array.from(stdMap.keys())[i]))
-                }
+            // for (let i = 0; i < stdMap.size; i++) {
+            // if ((stdMap.get(Array.from(stdMap.keys())[i])).id == studentID) {
+            if (stdMap.has(studentID.toString())) { // I found this solution in the last minute :D
+                // return (stdMap.get(Array.from(stdMap.keys())[i]));
+                return (stdMap.get(studentID.toString()));
             }
+            // }
         }
         function getCourseByID(courseID) {
-            for (let j = 0; j < crsMap.size; j++) {
-                // if ((crsMap.get(Array.from(crsMap.keys())[j])).id == courseID) {
-                if (crsMap.has(courseID.toString())) { // I found this solution in the last minute :D
-                    return (crsMap.get(Array.from(crsMap.keys())[j]));
-                }
+            // for (let j = 0; j < crsMap.size; j++) {
+            // if ((crsMap.get(Array.from(crsMap.keys())[j])).id == courseID) {
+            if (crsMap.has(courseID.toString())) { // I found this solution in the last minute :D
+                // return (crsMap.get(Array.from(crsMap.keys())[j]));
+                return (crsMap.get(courseID.toString()));
             }
+            // }
         }
         function exmLstForGivnDay(chosen) {
             // chosen is a course date
