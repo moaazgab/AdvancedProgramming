@@ -12,57 +12,64 @@
         }
         return e
     }
-    const BOOK_REF =
-        "http://eloquentjavascript.net/14_dom.html#h_AlX6HES+2D",
+    const TUT_REF =
+        "https://www.w3schools.com/js/",
         TITLE = "Counter",
-        PARAGRAPH = "Initial",
-        TEXT = "No book can ever be finished. While working "
-            + "on it we learn just enough to find it immature "
-            + "the moment we turn away from it.",
-        AUTH = "Karl Popper", YEAR = ", 1950",
-        DESC = ", preface to the second editon of ",
-        BOOK = "The Open Society and Its Enemies"
+        PARAGRAPH = "Initial"
+        let out = "",
+            emsp = "  "
 
     function makePage() {
-        //<p>— <b>AUTH</b>DESC<i>BOOK</i>YEAR</p>
-        let para = elt("p", PARAGRAPH)
-
+        
+        let h2Element = elt("h2", TITLE);
         let inputTxt = elt("input");
         let inputButton = elt("input");
-        let out = elt("p");
-
-        let span = elt("span", TEXT)
-        span.style.color = "blue"
+        out = elt("p");
+        
         let bold = elt("b", "Sample code")
         let pre = elt("pre", makePage)
-        let link = elt("a", "Creating nodes")
+        let link = elt("a", "JS Tutorial")
 
-        // txt.setAttribute("type", "text")
-        // button.setAttribute("type", "button");
+        h2Element.id = "tab";
 
         inputTxt.id = "inp";
         inputTxt.type = "number";
         inputTxt.value = 0;
-        inputTxt.onchange = "out.innerText = value";
+        inputTxt.setAttribute("onChange", "out.innerText=value");
 
         inputButton.type = "button";
         inputButton.value = "+";
-        inputButton.onclick = increment();
+        inputButton.setAttribute("onClick", "increment()");
 
         out.id = "out";
+        out.innerText = "1";
 
-        // link.href = BOOK_REF
-        // document.title = TITLE
+        link.href = TUT_REF
+        link.target = "NewTab"
+
+        document.title = TITLE
+
         document.body = elt("body",
-            elt("h2", TITLE),
+            h2Element,
+            PARAGRAPH,
+            emsp,
+            inputTxt, 
+            emsp,
+            inputButton,
+            out,
             elt("hr"),
-            elt("blockquote", span, para, inputTxt, inputButton, out),
+            elt("p", "Ref: ", link),
             elt("hr"),
             elt("div", bold, pre),
-            elt("div", "Ref: ", link),
             elt("hr")
         )
         document.body.style.maxWidth = "420px"
+        inputTxt.style.width = "50px";
+        out.style.fontSize = "18px";
+        out.style.background = "blue";
+        out.style.color = "white";
+        out.style.textAlign = "center";
+        out.style.padding = "10px";
     }
     function increment() {
         out.innerText = Number(out.innerText) + 1
