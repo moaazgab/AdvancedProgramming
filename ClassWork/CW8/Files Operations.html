@@ -41,7 +41,6 @@
             let a = [...local.files]
             let found = 0;
             let nameList = []
-            //Implement this
             for (let f of a) {
                 out.innerText += f.name + ", ";
                 if (f.size == b.size && f.type == b.type) {
@@ -51,11 +50,10 @@
             }
             out.innerHTML += '<br/>Result: ' + a.length + ' items checked, ';
             if (found > 0) {
-
-                for (let i = 0; i < nameList.length; i++) {
-                    let element = nameList[i];
+                a = nameList;
+                for (let f of a) {
+                    let element = f;
                     out.innerHTML += `${element}`.bold() + ", ";
-
                 }
                 out.innerHTML += " are the same.";
             }
