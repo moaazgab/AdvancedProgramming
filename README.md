@@ -2,7 +2,7 @@
 
 My BLM305E Advanced Programming Techniques Works
 
-# class works
+# Class works
 
 CW2.1: [Convert from inches to cm](https://moaazgab.github.io/AdvancedProgramming/ClassWork/CW2/ConvertFromtoInc.html)
 
@@ -28,7 +28,7 @@ CW10: [Crypto JS](https://moaazgab.github.io/AdvancedProgramming/ClassWork/CW10/
 
 CW11: [Event Listener](https://moaazgab.github.io/AdvancedProgramming/ClassWork/CW11/EventListner.html)
 
-# home works
+# Home works
 
 HW1: [Poisson Probailities](https://moaazgab.github.io/AdvancedProgramming/HomeWork/HW1/Poisson%20Probailities.html)
 
