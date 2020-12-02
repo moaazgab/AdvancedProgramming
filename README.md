@@ -28,7 +28,7 @@ CW10: [Crypto JS](https://moaazgab.github.io/AdvancedProgramming/ClassWork/CW10/
 
 CW11: [Event Listener](https://moaazgab.github.io/AdvancedProgramming/ClassWork/CW11/EventListner.html)
 
-# Home works
+# Homeworks
 
 HW1: [Poisson Probailities](https://moaazgab.github.io/AdvancedProgramming/HomeWork/HW1/Poisson%20Probailities.html)
 
