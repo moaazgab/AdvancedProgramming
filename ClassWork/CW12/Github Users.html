@@ -4,7 +4,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width">
-    <link rel="icon" href="../images/icon192.png">
+    <link rel="icon" href="icon192.png">
+    <link locationRel="locationIcon" href="location.png">
     <title>GitHub Users</title>
     <style>
         body {
@@ -21,7 +22,7 @@
 <body>
 
     <h2 id=title></h2>
-    <input type=text id=usr value=blm-fsmvu onChange="readUser()">
+    <input type=text id=usr value=maeyler onChange="readUser()">
     <p id=out></p>
     <hr />
     <b>Sample code</b>
@@ -48,31 +49,34 @@
             if (!u || !u.login)
                 error(usr.value + ' not found')
             //u.login is the same as usr.value
-            out.style.color = ''
-            out.innerHTML = ''
+            out.style.color = '';
+            out.innerHTML = '';
             //start with a tiny image
-            let i = document.createElement("img")
+            let i = document.createElement("img");
             i.src = u.avatar_url
-            i.align = "left"
-            out.appendChild(i)
+            i.style = "width:200px;height:150px;"
+            out.appendChild(i); out.innerHTML += '<br/>';
             //add name and location
-            let s = (u.name ? u.name : u.login)
-            if (u.location) s += ", " + u.location
-            out.innerHTML += s + BR; console.log(s)
+            let s = `<b style="font-size:20px;">${(u.name ? u.name : u.login)}</b>`;
+            s += '<br/>';
+            if (u.login) s += `${u.login}`.fontcolor("gray");
+            s += '<br/>'; s += '<br/>';
+            s  += '<img src="company.png" style="width:17px;height:17px;">';
+            if (u.company) s += u.company; s += '<br/>';
+            s  += '<img src="location.png" style="width:12px;height:12px;">';
+            if (u.location) s += u.location; 
+            s += '<br/>';
+            s  += '<img src="email.png" style="width:12px;height:9px;">';
+            if (u.email) s += u.email;
+            out.innerHTML += s + BR;
             //add link to GitHub 
             let h = "github.com/" + u.login
             let a = document.createElement("a")
-            a.href = "https://" + h
-            a.target = "NewTab"
-            a.innerText = h
+            a.href = "https://" + u.login + ".github.io/"; a.target = "NewTab"
+            a.innerHTML += '<img src="link.png" style="width:12px;height:12px;">';
+            a.innerHTML += a.href
+            a.style ="text-decoration: none;"
             out.appendChild(a)
-            //add repo count
-            let p = u.public_repos + " repos"
-            out.innerHTML += BR + p + BR + BR
-            let b = await toJSON(URL + u.login + "/repos")
-            if (!b.length) error('no data')
-            out.innerHTML +=
-                b.map(x => x.name).join(", ")
         }
         title.innerText = document.title
         sample.innerText = toJSON + '\n' + readUser
