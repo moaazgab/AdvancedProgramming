@@ -61,13 +61,20 @@
             s += '<br/>';
             if (u.login) s += `${u.login}`.fontcolor("gray");
             s += '<br/>'; s += '<br/>';
-            s  += '<img src="company.png" style="width:17px;height:17px;">';
-            if (u.company) s += u.company; s += '<br/>';
-            s  += '<img src="location.png" style="width:12px;height:12px;">';
-            if (u.location) s += u.location; 
+            s += '<img src="company.png" style="width:14px;height:17px;">';
+            if (u.company) s += u.company;
+            else
+                s += 'Not found'.fontcolor("red");
             s += '<br/>';
-            s  += '<img src="email.png" style="width:12px;height:9px;">';
+            s += '<img src="location.png" style="width:9px;height:12px;">';
+            if (u.location) s += u.location;
+            else
+                s += 'Not found'.fontcolor("red");
+            s += '<br/>';
+            s += '<img src="email.png" style="width:12px;height:9px;">';
             if (u.email) s += u.email;
+            else
+                s += 'Not found'.fontcolor("red");
             out.innerHTML += s + BR;
             //add link to GitHub 
             let h = "github.com/" + u.login
@@ -75,7 +82,7 @@
             a.href = "https://" + u.login + ".github.io/"; a.target = "NewTab"
             a.innerHTML += '<img src="link.png" style="width:12px;height:12px;">';
             a.innerHTML += a.href
-            a.style ="text-decoration: none;"
+            a.style = "text-decoration: none;"
             out.appendChild(a)
         }
         title.innerText = document.title
