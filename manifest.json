@@ -1,7 +1,7 @@
 {
     "name": "BLM305",
     "short_name": "BLM305",
-    "start_url": "https://moaazgab.github.io/AdvancedProgramming/",
+    "start_url": "README.html",
     "display": "standalone",
     "background_color": "blue",
     "theme-color": "blue",
