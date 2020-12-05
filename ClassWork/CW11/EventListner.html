@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="en-US">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width">
+    <link rel="icon" href="https://blm-fsmvu.github.io/305/images/icon192.png">
+    <title>Event Listener </title>
+
+    <style>
+        /* CSS comment */
+        body {
+            max-width: 440px;
+        }
+
+        #url {
+            width: 190px;
+        }
+
+        span,
+        #url {
+            color: blue;
+        }
+    </style>
+</head>
+
+<body>
+    <!-- HTML comment: Modify all items marked xxx -->
+
+    <h2 id=title title="Modify xxx"></h2>
+    <p title="Battery level">
+        Battery information: <span id=level>??</span>
+    </p>
+    <p>Online Status</p>
+    <!-- <p title="Connection"></p> -->
+    <div id="status"></div>
+    <div id="log"></div>
+    <p>Keyboard</p>
+    <div id="Keyboard"></div>
+    <hr />
+    <b>Sample code</b>
+    <pre id=sample>This text is not shown. Why?</pre>
+
+    <hr />
+
+    <script>
+        "use strict";
+        // JavaScript comment
+        window.addEventListener('load', function () {
+            var status = document.getElementById("status");
+            var log = document.getElementById("log");
+
+            function updateOnlineStatus(event) {
+                var condition = navigator.onLine ? "online" : "offline";
+
+                status.className = condition;
+                status.innerHTML = `${condition}`.fontcolor("blue");
+            }
+            window.addEventListener('online', updateOnlineStatus);
+            window.addEventListener('offline', updateOnlineStatus);
+        });
+        let battryLvl = '';
+        function init() {
+            let batteryPromise = navigator.getBattery();
+            batteryPromise.then(batteryCallback);
+            
+            // ----------------------------------------
+            window.addEventListener('load', function () {
+                var status = document.getElementById("status");
+                var log = document.getElementById("log");
+
+                function updateOnlineStatus(event) {
+                    var condition = navigator.onLine ? "online" : "offline";
+
+                    status.className = condition;
+                    status.innerHTML = `${condition}`.fontcolor("blue");
+                }
+                window.addEventListener('online', updateOnlineStatus);
+                window.addEventListener('offline', updateOnlineStatus);
+            });
+
+            // ----------------------------------------
+            const Keyboard = document.getElementById('Keyboard');
+            document.addEventListener('keypress', (e) => {
+                let s = `${e.code}`.substring(3);
+                Keyboard.innerHTML += s.fontcolor("blue") + "<br/>";
+            });
+        }
+        function printBatteryStatus(batteryObject) {
+            level.innerText = "" + "\n"
+            // console.log("IsCharging", batteryObject.charging); 
+            level.innerText += "IsCharging: " + batteryObject.charging + "\n"
+            // console.log("Percentage", batteryObject.level);
+            level.innerText += "Percentage: " + batteryObject.level * 100 + "%\n"
+            // console.log("charging Time", batteryObject.chargingTime);
+            level.innerText += "charging Time: " + batteryObject.chargingTime + "\n"
+            // console.log("DisCharging Time", batteryObject.dischargingTime);
+            level.innerText += "DisCharging Time: " + batteryObject.dischargingTime + " s\n"
+        }
+        function batteryCallback(batteryObject) {
+            printBatteryStatus(batteryObject);
+            batteryObject.addEventListener('chargingchange', () => printBatteryStatus(batteryObject));
+        }
+
+        function onlineStatus() {
+
+        }
+
+        title.innerText = document.title;
+        sample.innerText = init + '\n';
+        init();
+    </script>
+
+</body>
+
+</html>

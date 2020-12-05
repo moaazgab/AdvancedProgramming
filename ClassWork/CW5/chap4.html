@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en-US">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width">
+  <link rel="icon" href="https://blm-fsmvu.github.io/305/images/icon192.png">
+  <script src="data.js"></script>
+  <title>Data Analysis</title>
+</head>
+
+<body>
+
+  <h2 id=title></h2>
+  <!-- <p>Minimum correlation =
+    <input type=number id=inp value="0.0" style="width:50px" onChange="report(analyze(value))">
+  </p> -->
+  <p id=out></p>
+
+
+
+  <hr />
+  <p>Activity:
+    <select id="size" oninput="mapForActivity(this.options[this.selectedIndex].value)">
+      <option selected>pizza</option>
+      <option>carrot</option>
+      <option>exercise</option>
+      <option>weekend</option>
+      <option>bread</option>
+      <option>pudding</option>
+      <option>brushed teeth</option>
+      <option>touched tree</option>
+      <option>nachos</option>
+      <option>cycling</option>
+      <option>brussel sprouts</option>
+      <option>ice cream</option>
+      <option>computer</option>
+      <option>potatoes</option>
+      <option>candy</option>
+      <option>dentist</option>
+      <option>running</option>
+      <option>work</option>
+      <option>beer</option>
+      <option>cauliflower</option>
+      <option>lasagna</option>
+      <option>lettuce</option>
+      <option>television</option>
+      <option>spaghetti</option>
+      <option>reading</option>
+      <option>peanuts</option>
+    </select>
+  </p>
+  <p id=out1></p>
+
+  <hr />
+  <b>Sample code</b>
+  <pre id=sample></pre>
+
+  <hr />
+  <p>Ref: <a href="http://eloquentjavascript.net/04_data.html#p_LI+01yIQON" target="ExternalDocument">Chap 4, Final
+      analysis</a>
+  </p>
+
+  <script>
+    function report(a) {
+      // out.innerText = JOURNAL.length + " journal entries and "
+      //   + a.length + " events\n" + a.join("\n")
+      out.innerHTML = ifWeekendAndWorkExist();
+    }
+    function mapForActivity(chosen) {
+      // console.log("This is your input", chosen);
+      out1.innerHTML = searchForActivity(chosen);
+    }
+    title.innerText = document.title;
+    report([...EVENTS])  //Set to Array
+    sample.innerText = ifWeekendAndWorkExist + '\n ------------------------------------------ \n';
+    sample.innerText += searchForActivity;
+  </script>
+
+</body>
+
+</html>

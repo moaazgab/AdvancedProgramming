@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en-US">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width">
+    <link rel="icon" href="icon192.png">
+    <link locationRel="locationIcon" href="location.png">
+    <title>GitHub Users</title>
+    <style>
+        body {
+            max-width: 440px;
+        }
+
+        img {
+            padding-right: 12px;
+            width: 64px;
+        }
+    </style>
+</head>
+
+<body>
+
+    <h2 id=title></h2>
+    <input type=text id=usr value=maeyler onChange="readUser()">
+    <p id=out></p>
+    <hr />
+    <b>Sample code</b>
+    <pre id=sample></pre>
+    <hr />
+    <p>Ref: <a href="https://developer.github.com/v3/#rate-limiting" target=NewTab>GitHub Developer</a>
+    </p>
+
+    <script>
+        "use strict";
+        function error(t) {
+            out.style.color = 'red'
+            out.innerText = t; throw t
+        }
+        async function toJSON(url) {
+            let r = await fetch(url)
+            if (!r.ok) error(r.statusText)
+            return r.json()
+        }
+        async function readUser() {
+            const BR = "<BR>",
+                URL = "https://api.github.com/users/"
+            let u = await toJSON(URL + usr.value)
+            if (!u || !u.login)
+                error(usr.value + ' not found')
+            //u.login is the same as usr.value
+            out.style.color = '';
+            out.innerHTML = '';
+            //start with a tiny image
+            let i = document.createElement("img");
+            i.src = u.avatar_url
+            i.style = "width:200px;height:150px;"
+            out.appendChild(i); out.innerHTML += '<br/>';
+            //add name and location
+            let s = `<b style="font-size:20px;">${(u.name ? u.name : u.login)}</b>`;
+            s += '<br/>';
+            if (u.login) s += `${u.login}`.fontcolor("gray");
+            s += '<br/>'; s += '<br/>';
+            s += '<img src="company.png" style="width:14px;height:17px;">';
+            if (u.company) s += u.company;
+            else
+                s += 'Not found'.fontcolor("red");
+            s += '<br/>';
+            s += '<img src="location.png" style="width:9px;height:12px;">';
+            if (u.location) s += u.location;
+            else
+                s += 'Not found'.fontcolor("red");
+            s += '<br/>';
+            s += '<img src="email.png" style="width:12px;height:9px;">';
+            if (u.email) s += u.email;
+            else
+                s += 'Not found'.fontcolor("red");
+            out.innerHTML += s + BR;
+            //add link to GitHub 
+            let h = "github.com/" + u.login
+            let a = document.createElement("a")
+            a.href = "https://" + u.login + ".github.io/"; a.target = "NewTab"
+            a.innerHTML += '<img src="link.png" style="width:12px;height:12px;">';
+            a.innerHTML += a.href
+            a.style = "text-decoration: none;"
+            out.appendChild(a)
+        }
+        title.innerText = document.title
+        sample.innerText = toJSON + '\n' + readUser
+        out.innerText = "Reading data"
+        readUser()
+    </script>
+
+</body>
+
+</html>

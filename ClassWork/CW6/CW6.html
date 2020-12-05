@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="en-US">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width">
+  <link rel="icon" href="https://blm-fsmvu.github.io/305/images/icon192.png">
+  <title>xxx </title>
+
+  <style>
+    /* CSS comment */
+    body {
+      max-width: 440px;
+    }
+
+    #url {
+      width: 190px;
+    }
+
+    span,
+    #url {
+      color: blue;
+    }
+  </style>
+</head>
+
+<body>
+  <!-- HTML comment: Modify all items marked xxx -->
+
+  <h2 id=title title="Modify xxx"></h2>
+  <p title="navigator.platform">
+    Platform: <span id=plat>??</span>
+  </p>
+  <p title="Battery level">
+    Battery level: <span id=level>??</span>
+  </p>
+  <p title="Latitude/Longitude">
+    Location: <span id=loc>??</span>
+  </p>
+  <p title="URL exists?">
+    URL <input type=url id=url value="https://maeyler.github.io/" onChange="check()"> <span id=resp>??</span>
+  </p>
+  <hr />
+  <b>Sample code</b>
+  <pre id=sample>This text is not shown. Why?</pre>
+
+  <hr />
+
+  <script>
+    "use strict";
+    // JavaScript comment
+    function check() {
+      //write your code here
+
+    }
+    function getPlatform() {
+      var Name = "Not known";
+      if (navigator.appVersion.indexOf("Win") != -1) Name =
+        "Windows OS";
+      if (navigator.appVersion.indexOf("Mac") != -1) Name =
+        "MacOS";
+      if (navigator.appVersion.indexOf("X11") != -1) Name =
+        "UNIX OS";
+      if (navigator.appVersion.indexOf("Linux") != -1) Name =
+        "Linux OS";
+      return Name;
+    }
+    function init() {
+      //write your code here
+      plat.innerText = getPlatform();
+      navigator.getBattery().then(b => {
+        level.innerText = b.level * 100 + "%"
+      });
+      navigator.geolocation.getCurrentPosition(p => {
+        loc.innerText = p.coords.latitude.toFixed(4) + ", " + p.coords.longitude.toFixed(4);
+      });
+      check();
+    }
+    function validURL(str) {
+      var pattern = new RegExp('^(https?:\\/\\/)?' + // protocol
+        '((([a-z\\d]([a-z\\d-]*[a-z\\d])*)\\.)+[a-z]{2,}|' + // domain name
+        '((\\d{1,3}\\.){3}\\d{1,3}))' + // OR ip (v4) address
+        '(\\:\\d+)?(\\/[-a-z\\d%_.~+]*)*' + // port and path
+        '(\\?[;&a-z\\d%_.~+=-]*)?' + // query string
+        '(\\#[-a-z\\d_]*)?$', 'i'); // fragment locator
+      return !!pattern.test(str);
+    }
+    function check() {
+      fetch(url.value).then(r => {
+        resp.innerText = validURL(r)
+      }).catch(e => resp.innerText = e);
+    }
+    title.innerText = document.title;
+    sample.innerText = init + '\n' + check + '\n' + getPlatform + '\n' + validURL;
+    init();
+  </script>
+
+</body>
+
+</html>
