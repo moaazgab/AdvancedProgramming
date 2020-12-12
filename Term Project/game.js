@@ -62,7 +62,7 @@ function guess(id, guess) {
 
 function qcount() {
     var currentQuestionNumber = quiz.questionIndex + 1;
-    document.getElementById("qnum").innerHTML = "SORU: " + currentQuestionNumber + " / 10";
+    document.getElementById("qnum").innerHTML = "Question: " + currentQuestionNumber + " / 10";
 };
 
 function reenterContestYesOrNo(str) {
