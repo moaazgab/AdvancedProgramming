@@ -128,7 +128,14 @@
             let report = () => out.innerText = MAP.getZoom()
             MAP.on('zoom', report);
             report()
-            MAP.on('click', e => console.log(e.latlng))
+            MAP.on('click', e => {
+                console.log(e.latlng);
+                // console.log("this is lat: ", e.latlng.lat);
+                // console.log("THis is lon: ", e.latlng.lng);
+                lat = e.latlng.lat;
+                lon = e.latlng.lng;
+                askWeather();
+            })
         }
 
         function toHM(t, round) {
@@ -195,7 +202,7 @@
             else
                 formatErr.innerHTML = `Please follow specified format!`.fontcolor("red");
             askWeather();
-            // MAP = L.map('map').setView({}, 10) //setZoom(10)
+            MAP.setView([lat, lon]) //setView()
         }
         // Weather
         var accessKey;
@@ -205,17 +212,23 @@
             let url = U + "lat=" + lat + "&lon=" + lon + "&APPID=" + accessKey;
             hava.innerText = "getting weather"
             detay.innerText = ''
-            gunes.innerText = ''
-                /* replace this code by fetch()
-                let xhttp = new XMLHttpRequest()
-                xhttp.responseType = "text"
-                xhttp.onreadystatechange = () => {
-                   if (xhttp.readyState == 4 && xhttp.status == 200) 
-                      showWeather(JSON.parse(xhttp.responseText))
-                   else hava.innerText = "XX"
-                }
-                xhttp.open("GET", url, true); xhttp.send()
-                */
+            gunes.innerText = '';
+            /* replace this code by fetch()
+            let xhttp = new XMLHttpRequest()
+            xhttp.responseType = "text"
+            xhttp.onreadystatechange = () => {
+               if (xhttp.readyState == 4 && xhttp.status == 200) 
+                  showWeather(JSON.parse(xhttp.responseText))
+               else hava.innerText = "XX"
+            }
+            xhttp.open("GET", url, true); xhttp.send()
+            */
+            // find country
+            let m = new Map();
+            let r = await fetch('https://restcountries.eu/rest/v2/all');
+            for (let x of await r.json()) m.set(x.alpha2Code, x);
+            // m.get('')
+
             let data = await toJSON(url)
                 //  fetch(url).then(r => r.json()).then(showWeather)
                 // }
@@ -228,7 +241,7 @@
                 {
                     sys
                 } = data
-            let yy = data.name + ', ' + sys.country
+            let yy = data.name + ', ' + m.get(sys.country).name
             hava.innerText = hh;
             yer.innerText = yy
             console.log(hh, yy);
