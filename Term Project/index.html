@@ -27,9 +27,8 @@
         }
         
         #wrngScore {
-            text-align: right;
             color: red;
-            display: inline;
+            float: right;
         }
         
         .question {
@@ -72,8 +71,10 @@
     <p id="quiz"></p>
     <h2 id=title>This text is not shown. Why?</h2>
     <h6 style="color: antiquewhite;">This is a technology contest, you can answer question and we will guess your knowledge level!</h6>
-    <h4 id="crrScore">Correct: 0</h4>
-    <h4 id="wrngScore">Wrong: 0</h4>
+    <h4>
+        <span id="crrScore">Correct: 0</span>
+        <span id="wrngScore">Wrong: 0</span>
+    </h4>
 
     <p class="btn">
         <input type=button value="Restart" onClick="restart()" />
