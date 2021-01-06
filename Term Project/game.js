@@ -4,7 +4,7 @@ function Question(que, choices, answer) {
     this.answer = answer;
 }
 
-Question.prototype.isCorrectAnswer = function(choice) {
+Question.prototype.isCorrectAnswer = function (choice) {
     return this.answer == choice;
 }
 
@@ -12,51 +12,96 @@ function Quiz(questions) {
     this.score = 0;
     this.mistake = 0;
     this.questions = questions;
-    this.questionIndex = 0;
+    this.questionIndex = -1;
 }
 
-Quiz.prototype.getQuestionIndex = function() {
+Quiz.prototype.getQuestionIndex = function () {
     return this.questions[this.questionIndex];
 }
 
-Quiz.prototype.guess = function(answer) {
+Quiz.prototype.guess = function (id, answer, correctButtonNumber) {
     if (this.getQuestionIndex().isCorrectAnswer(answer)) {
         this.score++;
         var scoreHTML = "";
         scoreHTML = scoreHTML + ("Correct: " + quiz.score);
         document.getElementById("crrScore").innerHTML = scoreHTML;
+        document.getElementById(id).style.background = "#00ff00";
     } else {
         this.mistake++;
         var mistakeHTML = "";
         mistakeHTML = mistakeHTML + ("Wrong: " + quiz.mistake);
         document.getElementById("wrngScore").innerHTML = mistakeHTML;
+        document.getElementById(id).style.background = "#ff0000";
+        // show correct answer
+        document.getElementById("btn" + correctButtonNumber).style.background = "#00ff00";
     }
+}
 
+Quiz.prototype.increaseQuesIndex = function () {
     this.questionIndex++;
 }
 
-Quiz.prototype.endGame = function() {
+Quiz.prototype.endGame = function () {
     return this.questionIndex == 10;
 }
 
+function resetBtnBackgroundColor(){
+    document.getElementById("btn0").style.background = "#D3D3D3";
+    document.getElementById("btn1").style.background = "#D3D3D3";
+    document.getElementById("btn2").style.background = "#D3D3D3";
+    document.getElementById("btn3").style.background = "#D3D3D3";
+}
+
+const waitTime = 3000;
+
+function findCorrectButton(choices){
+    for (var i = 0; i < choices.length; i++) {
+        if (choices[i] == quiz.getQuestionIndex().answer) {
+            return i;
+        }
+    }
+}
 function run() {
+    resetBtnBackgroundColor();
+    quiz.increaseQuesIndex();
+    console.log("question is: ", quiz.getQuestionIndex());
     if (quiz.endGame()) {
         message();
     } else {
         document.getElementById("question").innerHTML = quiz.getQuestionIndex().que;
         var choices = quiz.getQuestionIndex().choices;
+        var btn = findCorrectButton(choices);
         for (var i = 0; i < choices.length; i++) {
             document.getElementById("choice" + i).innerHTML = choices[i];
-            guess("btn" + i, choices[i]);
+            guess("btn" + i, choices[i], btn);
         }
         qcount();
     }
 };
+var timeoutID;
+function wait(time) {
+    timeoutID = setTimeout(function () {
+        runController(0);
+    }, time);
+}
 
-function guess(id, guess) {
-    document.getElementById(id).onclick = function() {
-        quiz.guess(guess);
+// if param. equals 1 then run() called from html
+// else it's called from timeOut()
+function runController(quick) {
+    // if run() called from user quickly 
+    if (quick == 1) {
+        clearTimeout(timeoutID);
+        // clearInterval(timeoutID);
         run();
+    } else { // if user waits to see correct answers (wait for timeOut)
+        run();
+    }
+}
+
+function guess(id, guess, correctButtonNumber) {
+    document.getElementById(id).onclick = function () {
+        quiz.guess(id, guess, correctButtonNumber);
+        wait(waitTime);
     }
 };
 
@@ -74,8 +119,8 @@ function reenterContestYesOrNo(str) {
         document.getElementById("btn1").disabled = true;
         document.getElementById("btn2").disabled = true;
         document.getElementById("btn3").disabled = true;
+        document.getElementById("next").disabled = true;
         document.getElementById("question").innerHTML = 'We wish you best of luck!<br>Bye &#128075;'.fontcolor("#1FFD00").fontsize("24");
-        document.getElementById("question").style.textAlign = "center";
     }
 }
 
@@ -92,6 +137,10 @@ function message() {
 
 function restart() {
     location.reload();
+}
+
+function test() {
+    console.log("This is test");
 }
 
 let questions = [
