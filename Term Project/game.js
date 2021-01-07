@@ -64,7 +64,7 @@ function findCorrectButton(choices){
 function run() {
     resetBtnBackgroundColor();
     quiz.increaseQuesIndex();
-    //console.log("question is: ", quiz.getQuestionIndex());
+    console.log("question is: ", quiz.getQuestionIndex());
     if (quiz.endGame()) {
         message();
     } else {
